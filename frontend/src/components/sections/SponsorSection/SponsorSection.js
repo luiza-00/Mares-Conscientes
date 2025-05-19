@@ -11,8 +11,14 @@ import {
   Typography,
   Container,
   Box,
-  CircularProgress,
 } from '@mui/material';
+import { createClient } from '@supabase/supabase-js';
+
+// 🔒 SUBSTITUA PELOS SEUS DADOS:
+const supabase = createClient(
+  'https://grfldemksgslvbresrhg.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyZmxkZW1rc2dzbHZicmVzcmhnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc2MjM3MDgsImV4cCI6MjA2MzE5OTcwOH0.pXsio5eKJ7shRhOLa3lCkxopU2zf1Jfr9Dd_XVmWP0U'
+);
 
 function SponsorSection() {
   const [nome, setNome] = useState('');
@@ -20,7 +26,6 @@ function SponsorSection() {
   const [telefone, setTelefone] = useState('');
   const [tipoInteresse, setTipoInteresse] = useState('patrocinador');
   const [sugestao, setSugestao] = useState('');
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
@@ -28,47 +33,28 @@ function SponsorSection() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true);
 
-    const formData = {
+    const dados = {
       nome,
       email,
       telefone,
-      tipoInteresse,
+      tipo_interesse: tipoInteresse,
       sugestao: tipoInteresse === 'sugestao' ? sugestao : '',
     };
 
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sponsor`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+    const { error } = await supabase.from('sponsors').insert([dados]);
 
-      const result = await response.json();
-
-      if (result.status === 'success') {
-        alert('Formulário enviado com sucesso!');
-        setNome('');
-        setEmail('');
-        setTelefone('');
-        setTipoInteresse('patrocinador');
-        setSugestao('');
-      } else {
-        alert('Erro ao enviar o formulário.');
-        console.error('Erro do servidor:', result);
-      }
-    } catch (error) {
-      alert('Erro de rede ao enviar os dados.');
-      console.error('Erro de rede:', error);
-    } finally {
-      setLoading(false);
+    if (error) {
+      console.error('Erro Supabase:', error);
+      alert('Erro ao enviar. Verifique os campos ou tente novamente.');
+    } else {
+      alert('Formulário enviado com sucesso!');
+      setNome('');
+      setEmail('');
+      setTelefone('');
+      setTipoInteresse('patrocinador');
+      setSugestao('');
     }
-  };
-
-  const handleTipoInteresseChange = (event) => {
-    setTipoInteresse(event.target.value);
-    setSugestao('');
   };
 
   return (
@@ -114,19 +100,11 @@ function SponsorSection() {
             onChange={(e) => setTelefone(e.target.value)}
             margin="normal"
           />
-          <FormControl style={{ alignItems: 'center' }} fullWidth margin="normal" required>
+          <FormControl fullWidth margin="normal" required style={{ alignItems: 'center' }}>
             <Typography sx={{ mb: 1 }}>Como você gostaria de nos apoiar?</Typography>
-            <RadioGroup value={tipoInteresse} onChange={handleTipoInteresseChange}>
-              <FormControlLabel
-                value="patrocinador"
-                control={<Radio />}
-                label="Quero ser um patrocinador"
-              />
-              <FormControlLabel
-                value="sugestao"
-                control={<Radio />}
-                label="Quero dar uma sugestão"
-              />
+            <RadioGroup value={tipoInteresse} onChange={(e) => setTipoInteresse(e.target.value)}>
+              <FormControlLabel value="patrocinador" control={<Radio />} label="Quero ser um patrocinador" />
+              <FormControlLabel value="sugestao" control={<Radio />} label="Quero dar uma sugestão" />
             </RadioGroup>
           </FormControl>
           {tipoInteresse === 'sugestao' && (
@@ -142,8 +120,8 @@ function SponsorSection() {
             />
           )}
           <Box textAlign="center" mt={2}>
-            <Button type="submit" variant="contained" color="primary" disabled={loading}>
-              {loading ? <CircularProgress size={24} /> : 'Enviar'}
+            <Button type="submit" variant="contained" color="primary">
+              Enviar
             </Button>
           </Box>
         </Box>

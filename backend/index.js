@@ -1,16 +1,25 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+require('dotenv').config();
 const { Pool } = require('pg');
-
 const app = express();
 const port = process.env.PORT || 3001;
 
 // Conexão com o PostgreSQL
+
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || 'postgresql://postgres:senha1234@localhost:5432/mares_conscientes',
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  user: process.env.PGUSER,
+  host: process.env.PGHOST,
+  database: process.env.PGDATABASE,
+  password: process.env.PGPASSWORD,
+  port: process.env.PGPORT,
 });
+
+pool.connect()
+  .then(() => console.log("Conectado ao banco Supabase!"))
+  .catch((err) => console.error("Erro na conexão:", err));
 
 app.use(cors());
 app.use(bodyParser.json());
