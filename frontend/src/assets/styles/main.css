@@ -1,0 +1,59 @@
+/* src/assets/styles/main.css */
+@import './abstracts/_variables.css';
+@import 'primereact/resources/primereact.min.css'; /* Estilos base do PrimeReact */
+@import 'primeicons/primeicons.css';             /* Ícones do PrimeIcons */
+@import 'primereact/resources/themes/saga-blue/theme.css'; /* Tema do PrimeReact */
+
+
+/* Estilos globais adicionais aqui */
+
+body {
+  font-family: sans-serif; /* Defina uma fonte global se quiser */
+  color: rgb(0,0,0,0.9);
+  width: 100%;
+  margin: 0; /* Remova a margem padrão do body */
+  padding: 0; /* Remova o padding padrão do body */
+}
+
+#root {
+  margin: 0;
+  padding: 0;
+}
+
+.p-component {
+  font-family: sans-serif; /* Garante que os componentes PrimeReact usem a mesma fonte */
+}
+
+/* **ESTES SÃO OS ESTILOS IMPORTANTES PARA A COR DA FONTE DA NAVBAR:** */
+/* Garante que todo o texto dentro da Menubar tenha a cor branca */
+.p-menubar {
+  color: white;
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+a {
+  color: white !important;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #f0f0f0 !important;
+}
+
+/* Garante que os links da navbar tenham texto branco */
+.p-menubar .p-menuitem > a {
+  color: white !important; /* Força a cor branca para o texto dos links */
+  font-weight: 500;
+  position: fixed !important;
+}
+
+/* Cor de destaque quando o usuário passar o mouse nos links */
+.p-menubar .p-menuitem > a:hover {
+  color: #fafcfc !important;
+}
+
+/* Para os textos customizados (logo e end) que usem o estilo inline */
+/* Certifique-se que tenham 'color: white' nos seus estilos inline */

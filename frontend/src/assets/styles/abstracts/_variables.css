@@ -1,0 +1,13 @@
+/* src/assets/styles/abstracts/_variables.css */
+:root {
+    --primary-color: #007bff; /* Azul primário para a ONG - ajuste se quiser outra cor */
+    --secondary-color: #6c757d; /* Cor secundária */
+    --success-color: #28a745; /* Verde para sucesso */
+    --warning-color: #ffc107; /* Amarelo para avisos */
+    --danger-color: #dc3545; /* Vermelho para erros */
+    --info-color: #17a2b8; /* Azul claro para informações */
+    --light-color: #f8f9fa; /* Cor clara */
+    --dark-color: #343a40; /* Cor escura */
+    --text-color: #212529; /* Cor do texto padrão */
+    --bg-light: #f4f4f4; /* Fundo claro para seções */
+  }
