@@ -37,7 +37,7 @@ app.post('/api/sponsor', async (req, res) => {
     console.error('Erro ao salvar no banco:', error);
     res.status(500).json({ status: 'error', message: error.message });
   }
-});
+})
 
 app.get('/', (req, res) => {
   res.send('Backend funcionando!');

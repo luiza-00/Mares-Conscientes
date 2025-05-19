@@ -12,13 +12,6 @@ import {
   Container,
   Box,
 } from '@mui/material';
-import { createClient } from '@supabase/supabase-js';
-
-// 🔒 SUBSTITUA PELOS SEUS DADOS:
-const supabase = createClient(
-  'https://grfldemksgslvbresrhg.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyZmxkZW1rc2dzbHZicmVzcmhnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc2MjM3MDgsImV4cCI6MjA2MzE5OTcwOH0.pXsio5eKJ7shRhOLa3lCkxopU2zf1Jfr9Dd_XVmWP0U'
-);
 
 function SponsorSection() {
   const [nome, setNome] = useState('');
@@ -34,26 +27,30 @@ function SponsorSection() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const dados = {
-      nome,
-      email,
-      telefone,
-      tipo_interesse: tipoInteresse,
-      sugestao: tipoInteresse === 'sugestao' ? sugestao : '',
-    };
+    const response = await fetch('/api/sponsor', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nome,
+        email,
+        telefone,
+        tipoInteresse,
+        sugestao: tipoInteresse === 'sugestao' ? sugestao : '',
+      }),
+    });
 
-    const { error } = await supabase.from('sponsors').insert([dados]);
+    const result = await response.json();
 
-    if (error) {
-      console.error('Erro Supabase:', error);
-      alert('Erro ao enviar. Verifique os campos ou tente novamente.');
-    } else {
+    if (result.status === 'success') {
       alert('Formulário enviado com sucesso!');
+      // Resetar os campos
       setNome('');
       setEmail('');
       setTelefone('');
       setTipoInteresse('patrocinador');
       setSugestao('');
+    } else {
+      alert('Erro ao enviar o formulário. Tente novamente.');
     }
   };
 
